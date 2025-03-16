@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <title>Controle Estoque - Produtos</title>
+
+    <style>
+      #app,
+      #produtos,
+      #tabela-produtos {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      #app form {
+        display: flex;
+        flex-direction: column;
+        gap: var(--gap);
+      }
+
+      #app form div {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      #app form label {
+        padding-right: 20px;
+      }
+
+      #app form [type="submit"] {
+        flex-grow: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <a href="/">Voltar</a>
+    </div>
+
+    <div id="app">
+      <form id="form-produto-cadastro">
+        <h2>Cadastrar Produto</h2>
+        <div>
+          <label for="nome">Nome:</label>
+          <input name="nome" />
+        </div>
+
+        <div>
+          <label for="quantidade">Quantidade:</label>
+          <input name="quantidade" type="number" min="0" max="100" />
+        </div>
+
+        <div>
+          <button type="submit">Cadastrar</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="produtos">Lista Produtos</div>
+
+    <div id="tabela-produtos">
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Quantidade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="template hidden">
+            <td>Produto 1</td>
+            <td>10</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
+    <script type="module">
+      import { onReady } from "./src/utils";
+      import { getProdutos, addProduto } from "./src/api.js";
+
+      onReady(async () => {
+        document
+          .querySelector("#form-produto-cadastro")
+          .addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const form = event.target;
+            const formData = new FormData(form);
+            const produto = Object.fromEntries(formData);
+
+            try {
+              await addProduto(produto);
+              addProdutoLista(produto);
+              addProdutoTabela(produto);
+              form.reset();
+            } catch (err) {
+              console.error(err);
+              alert("Erro ao cadastrar produto");
+            }
+          });
+
+        const produtos = await getProdutos();
+        produtos.forEach(addProdutoLista);
+
+        setTimeout(() => {
+          produtos.forEach(addProdutoTabela);
+        }, 2000);
+      });
+
+      function addProdutoLista(produto) {
+        const div = document.createElement("div");
+        div.textContent = `${produto.nome} - ${produto.quantidade}`;
+        document.querySelector("#produtos").appendChild(div);
+      }
+
+      function addProdutoTabela(produto) {
+        const tr = document
+          .querySelector("#tabela-produtos .template")
+          .cloneNode(true);
+        tr.classList.remove("template", "hidden");
+
+        tr.querySelector("td").textContent = produto.nome;
+        tr.querySelector("td:nth-child(2)").textContent = produto.quantidade;
+
+        document.querySelector("#tabela-produtos tbody").appendChild(tr);
+      }
+    </script>
+  </body>
+</html>

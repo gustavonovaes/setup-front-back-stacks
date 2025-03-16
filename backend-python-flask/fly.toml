@@ -1,0 +1,10 @@
+app = "backend-python"
+
+[env]
+  PORT = "8080"
+  PYTHONUNBUFFERED = "1"
+  FLASK_APP = "app.py"
+  FLASK_ENV = "development"
+
+[build]
+  builder = "python-builder"
