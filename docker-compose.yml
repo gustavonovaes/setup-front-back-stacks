@@ -11,7 +11,7 @@ services:
       - backend
   backend:
     build:
-      context: ./backend-python/
+      context: ./backend-node-fastify-modular/
       dockerfile: Dockerfile
     ports:
       - "5000:5000"

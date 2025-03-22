@@ -1,5 +1,4 @@
 import "./style.css";
-import "./utils";
 import { onReady } from "./utils";
 
 onReady(() => {
