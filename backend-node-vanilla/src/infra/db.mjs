@@ -19,5 +19,8 @@ export async function createDatabaseConnection(dbURI, timeoutMS = 5000) {
 }
 
 export async function closeDatabaseConnection() {
+  if (!conn) {
+    console.warn('WARN: Connection does not exist to disconnect')
+  }
   await conn?.close();
 }

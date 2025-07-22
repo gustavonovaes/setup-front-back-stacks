@@ -33,9 +33,9 @@ export function createServer(serverOptions, routerMap = {}) {
   return http.createServer(serverOptions, handler);
 }
 
-export function listenWithGracefulShutdown({ server, listenOptons, handleShutdown }) {
-  server.listen(listenOptons, () => {
-    console.info(`SERVER: PID ${process.pid} Server listening in ${JSON.stringify(listenOptons)}...`);
+export function listenWithGracefulShutdown({ server, listenOptions, handleShutdown }) {
+  server.listen(listenOptions, () => {
+    console.info(`SERVER: PID ${process.pid} Server listening in ${JSON.stringify(listenOptions)}...`);
   });
 
   process.on('SIGINT', handleShutdown);
