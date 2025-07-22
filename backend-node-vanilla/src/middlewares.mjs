@@ -1,11 +1,11 @@
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 
-export function middlewareStack(...midlewares) {
+export function middlewareStack(...middlewares) {
   return (next) => {
-    for (let i = midlewares.length - 1; i >= 0; i--) {
-      next = midlewares[i](next);
-    }
-    return next;
+    return middlewares.reduceRight(
+      (next, middleware) => middleware(next),
+      next
+    );
   };
 }
 
