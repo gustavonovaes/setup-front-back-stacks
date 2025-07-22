@@ -1,26 +1,25 @@
 import mongodb from "mongodb";
 
-let conn;
+let client;
 
 export async function createDatabaseConnection(dbURI, timeoutMS = 5000) {
-  if (conn) {
-    console.log('INFO: Reusing existing database connection')
-    return conn;
+  if (client) {
+    console.log('INFO: Reusing existing database connection');
+    return client.db(client.options.dbName);
   }
 
-  const client = new mongodb.MongoClient(dbURI, {
+  client = new mongodb.MongoClient(dbURI, {
     timeoutMS: timeoutMS,
     connectTimeoutMS: timeoutMS,
     socketTimeoutMS: timeoutMS,
   });
   await client.connect();
-  conn = client.db(client.options.dbName);
-  return conn;
+  return client.db(client.options.dbName);
 }
 
 export async function closeDatabaseConnection() {
-  if (!conn) {
-    console.warn('WARN: Connection does not exist to disconnect')
+  if (!client) {
+    console.warn('WARN: Client does not exist to close');
   }
-  await conn?.close();
+  await client.close();
 }
