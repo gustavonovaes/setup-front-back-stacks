@@ -2,6 +2,7 @@ import "dotenv/config";
 import { cpus } from "node:os";
 import cluster from "node:cluster";
 import http from "node:http";
+import mongodb from "mongodb";
 
 import { createServer, listenWithGracefulShutdown } from "./server";
 import { createRoutes } from "./routes";
@@ -9,7 +10,6 @@ import { createRoutes } from "./routes";
 import { closeDatabaseConnection, createDatabaseConnection } from "./infra/db";
 
 import productRoutes from "./modules/products/product.routes";
-import mongodb from "mongodb";
 
 const numCPUs = Math.min(
   cpus().length,
