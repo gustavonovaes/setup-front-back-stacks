@@ -1,7 +1,6 @@
 {
-  "name": "backend-node-vanilla",
+  "name": "backend-node-vanilla-ts",
   "version": "1.0.0",
-  "main": "src/index",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc && tsc-alias",
@@ -13,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "dotenv": "^17.2.0",
     "http-status-codes": "^2.3.0",
     "mongodb": "^6.17.0"
   },

@@ -1,28 +1,20 @@
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import mongodb from "mongodb";
 
 import {
   middlewareEnsureSecretKey,
   middlewareLogging,
   middlewareStack,
 } from "@/middlewares";
-import productRoutes from "@/modules/products/product.routes";
 import { Handler, Request, Response } from "@/types";
 
-type CreateRoutesParams = {
-  db: mongodb.Db;
-};
+export const withSecretKey = middlewareStack(
+  middlewareLogging,
+  middlewareEnsureSecretKey(process.env.SECRET_KEY ?? "42")
+);
 
-export function createRoutes({
-  db,
-}: CreateRoutesParams): Record<string, Handler> {
-  const withSecretKey = middlewareStack(
-    middlewareLogging,
-    middlewareEnsureSecretKey(process.env.SECRET_KEY ?? "42")
-  );
-
-  const defaultRoutes = {
-    "GET /healthcheck": async (req: Request, res: Response) => {
+export function createRoutes(): Record<string, Handler> {
+  return {
+    "GET /healthcheck": async (_req: Request, res: Response) => {
       res.status(StatusCodes.OK).send({
         pid: process.pid,
       });
@@ -33,11 +25,6 @@ export function createRoutes({
         query: req.query,
       });
     }),
-  };
-
-  return {
-    ...defaultRoutes,
-    ...productRoutes({ db }),
   };
 }
 
